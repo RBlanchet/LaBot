@@ -1,0 +1,5 @@
+wdom
+fritm
+colorama
+scapy
+tqdm

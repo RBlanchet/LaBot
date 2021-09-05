@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  labot:
+    build: 
+      context: ./docker
+    volumes: 
+      - .:/app
+    tty: true # Keep container running

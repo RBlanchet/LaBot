@@ -8,6 +8,8 @@ import argparse
 
 from tqdm import tqdm
 
+length = None;
+
 class_pattern = r"\s*public class (?P<name>\w+) (?:extends (?P<parent>\w+) )?implements (?P<interface>\w+)\n"
 id_pattern = r"\s*public static const protocolId:uint = (?P<id>\d+);\n"
 public_var_pattern = r"\s*public var (?P<name>\w+):(?P<type>\S*)( = (?P<init>.*))?;\n"
@@ -78,6 +80,8 @@ def parseVar(name, typename, lines):
 
 
 def parseVectorVar(name, typename, lines):
+    global length, type
+
     if typename in types:
         type = typename
 
@@ -93,10 +97,12 @@ def parseVectorVar(name, typename, lines):
         m = re.fullmatch(vector_attr_write_pattern, line)
         if m:
             type = m.group("type")
+            length = None
 
         m = re.fullmatch(dynamic_type_pattern, line)
         if m:
             type = False
+            length = None
 
         m = re.fullmatch(vector_len_write_pattern, line)
         if m:
@@ -105,6 +111,7 @@ def parseVectorVar(name, typename, lines):
         m = re.fullmatch(vector_const_len_pattern, line)
         if m:
             length = int(m.group("size"))
+    
 
     return dict(name=name, length=length, type=type, optional=False)
 
